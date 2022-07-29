@@ -12,7 +12,7 @@ var ready_players = 0
 
 var game_started = false
 
-var spawn_position_available = [Vector2(550,400), Vector2(600,400)]
+var spawn_position_available = [Vector2(550,400), Vector2(650,400)]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -105,6 +105,7 @@ func spawn_players():
 		var spawn_position = spawn_position_available.pop_front()
 		# Initialize State
 		# Spawn player at server
+		print("spawning", spawn_position)
 		get_node("World").SpawnPlayer(player_id, spawn_position)
 		# Inform spawn to clients
 		rpc_id(0, "SpawnPlayer", player_id, spawn_position)
