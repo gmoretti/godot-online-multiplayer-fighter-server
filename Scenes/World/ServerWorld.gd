@@ -14,7 +14,7 @@ var player_spawn_points = []
 func _ready():
 	pass # Replace with function body.
 
-func SpawnAttack(spawn_time, position, direction, player_id):
+func SpawnAttack(_spawn_time, position, direction, player_id):
 	var bullet_instance = bullet.instance()
 	bullet_instance.player_id = player_id
 	bullet_instance.position = position
@@ -39,16 +39,14 @@ func SpawnPlayer(player_id, spawn_position):
 		new_player.name = str(player_id)
 		get_node("./OtherPlayers").add_child(new_player)
 		
-func DispawnPlayer(player_id):
+func DispawnPlayer(player_id): 
 	yield(get_tree().create_timer(0.2), "timeout")
 	get_node("./OtherPlayers/" + str(player_id)).queue_free()
 	
 func ProcessPlayerState(player_id, player_state):
 	get_node("OtherPlayers/" + str(player_id)).MovePlayer(player_state["P"], player_state["A"])
 	
-func PlayerHit(player_id, damage):
-	print("playerHit")
-	var player_state = get_parent().player_state_collection.get(player_id)
+func PlayerHit(player_id, _damage):
 	var player_node = get_node("OtherPlayers/" + str(player_id))
 	player_node.current_hp = player_node.current_hp - 10
 	player_node.SetHealthLabel()
