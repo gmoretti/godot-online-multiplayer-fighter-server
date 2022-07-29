@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 var max_hp = 100
 var current_hp
+var dead = false
 
 func _ready():
 	current_hp = max_hp

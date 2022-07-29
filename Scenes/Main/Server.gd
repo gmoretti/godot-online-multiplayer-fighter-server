@@ -12,7 +12,8 @@ var ready_players = 0
 
 var game_started = false
 
-var spawn_position_available = [Vector2(550,400), Vector2(650,400)]
+var spawn_position_available = [Vector2(550,400), Vector2(550,100), Vector2(650,400),  Vector2(700,200)]
+var available_colors = [Color("ED6A5A"),Color("fff200"),Color("3F8A5F"),Color("5CA4E3"),Color("E677E0")]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -81,6 +82,9 @@ remote func Attack(position, direction, spawn_time):
 # In reality sends Health to avoid tampering
 func SendDamage(health, player_id):
 	rpc_id(0, "ReceiveDamage", health, OS.get_system_time_msecs(), player_id)
+	
+func KillPlayer(player_id):
+	rpc_id(0, "ReceiveKillPlayer", OS.get_system_time_msecs(), player_id)
 
 # Lobby and waiting roon code
 remote func send_player_info(id, player_data):
@@ -103,8 +107,9 @@ remote func load_world():
 func spawn_players():
 	for player_id in players:
 		var spawn_position = spawn_position_available.pop_front()
+		var color = available_colors.pop_front()
 		# Initialize State
 		# Spawn player at server
 		get_node("World").SpawnPlayer(player_id, spawn_position)
 		# Inform spawn to clients
-		rpc_id(0, "SpawnPlayer", player_id, spawn_position)
+		rpc_id(0, "SpawnPlayer", player_id, spawn_position, color)

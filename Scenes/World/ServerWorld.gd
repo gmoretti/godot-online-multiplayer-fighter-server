@@ -7,7 +7,7 @@ var occupied_locations = {}
 
 var player_spawn = preload("res://Scenes/Characters/ServerPlayerTemplate.tscn")
 var player_list = []
-var player_spawn_points = []
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -48,6 +48,11 @@ func ProcessPlayerState(player_id, player_state):
 	
 func PlayerHit(player_id, _damage):
 	var player_node = get_node("OtherPlayers/" + str(player_id))
-	player_node.current_hp = player_node.current_hp - 10
-	player_node.SetHealthLabel()
-	get_parent().SendDamage(player_node.current_hp, player_id)
+	if player_node.dead == false:
+		player_node.current_hp = player_node.current_hp - 10
+		player_node.SetHealthLabel()
+		get_parent().SendDamage(player_node.current_hp, player_id)
+	
+	if player_node.current_hp == 0:
+		player_node.dead = true
+		get_parent().KillPlayer(player_id)
