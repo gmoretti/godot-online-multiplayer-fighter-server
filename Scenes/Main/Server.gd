@@ -105,7 +105,6 @@ func spawn_players():
 		var spawn_position = spawn_position_available.pop_front()
 		# Initialize State
 		# Spawn player at server
-		print("spawning", spawn_position)
 		get_node("World").SpawnPlayer(player_id, spawn_position)
 		# Inform spawn to clients
 		rpc_id(0, "SpawnPlayer", player_id, spawn_position)
