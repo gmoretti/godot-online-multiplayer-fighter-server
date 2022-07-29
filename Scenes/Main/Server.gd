@@ -88,9 +88,11 @@ func KillPlayer(player_id):
 
 # Lobby and waiting roon code
 remote func send_player_info(id, player_data):
-	players[id] = player_data
-	rset("players", players)
-	rpc("update_waiting_room")
+	# Max player check TODO this should be better
+	if !spawn_position_available.empty():
+		players[id] = player_data
+		rset("players", players)
+		rpc("update_waiting_room")
 	
 func remove_player_info(player_id):
 	players.erase(player_id)
