@@ -12,8 +12,11 @@ var ready_players = 0
 
 var game_started = false
 
-var spawn_position_available = [Vector2(550,400), Vector2(550,100), Vector2(650,400),  Vector2(700,200)]
-var available_colors = [Color("ED6A5A"),Color("fff200"),Color("3F8A5F"),Color("5CA4E3"),Color("E677E0")]
+const spawn_position_available_default = [Vector2(550,400), Vector2(550,100), Vector2(650,400),  Vector2(700,200)]
+const available_colors_default = [Color("ED6A5A"),Color("fff200"),Color("3F8A5F"),Color("5CA4E3"),Color("E677E0")]
+
+var spawn_position_available = spawn_position_available_default.duplicate()
+var available_colors = available_colors_default.duplicate()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -45,6 +48,18 @@ func _Peer_Disconnected(player_id):
 		# Spawn player at server
 		get_node("World").DispawnPlayer(player_id)
 		rpc_id(0, "DispawnPlayer", player_id)
+	if players.size() == 0:
+		reset_room()
+		
+func reset_room():
+	game_started = false
+	spawn_position_available = spawn_position_available_default.duplicate()
+	available_colors = available_colors_default.duplicate()
+	player_state_collection = {}
+	# Lobby and Waitin Roon variables
+	players = {}
+	ready_players = 0
+	network.refuse_new_connections = false
 	
 remote func getData(requested_data, requester):
 	var player_id = get_tree().get_rpc_sender_id()
@@ -88,7 +103,7 @@ func KillPlayer(player_id):
 
 # Lobby and waiting roon code
 remote func send_player_info(id, player_data):
-	# Max player check TODO this should be better
+	# Max player check TODO th is should be better
 	if !spawn_position_available.empty():
 		players[id] = player_data
 		rset("players", players)
@@ -103,6 +118,8 @@ remote func load_world():
 	ready_players += 1
 	if players.size() > 0 and ready_players >= players.size():
 		game_started = true
+		# This is needed to avoid crashing in clients when game already started
+		network.refuse_new_connections = true
 		rpc("start_game")
 		spawn_players()
 		
