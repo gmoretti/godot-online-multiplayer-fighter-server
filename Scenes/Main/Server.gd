@@ -12,7 +12,7 @@ var ready_players = 0
 
 var game_started = false
 
-const spawn_position_available_default = [Vector2(550,400), Vector2(550,100), Vector2(650,400),  Vector2(700,200)]
+const spawn_position_available_default = [Vector2(2200,949), Vector2(264,312), Vector2(154,944),  Vector2(2192,455)]
 const available_colors_default = [Color("ED6A5A"),Color("fff200"),Color("3F8A5F"),Color("5CA4E3"),Color("E677E0")]
 
 var spawn_position_available = spawn_position_available_default.duplicate()
